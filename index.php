@@ -32,7 +32,7 @@
     <article class="main">
         <header><h1>Welkom bij onze website</h1></header>
         <section>
-            Dit is onze website.
+            Pietje puk test
         </section>
     </article>
 </main>

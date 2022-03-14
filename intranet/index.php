@@ -46,7 +46,7 @@ function reportUserInfo()
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<? include_once '../partials/navbar.php'; ?>
+<? include_once '../partials/navbarMedewerker.php'; ?>
 <main class="container-fluid">
     <article>
         <section>

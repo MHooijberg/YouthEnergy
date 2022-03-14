@@ -46,7 +46,7 @@ function reportUserInfo()
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<? include_once '../partials/navbarMedewerker.php'; ?>
+<? include_once '../partials/navbarIndex.php'; ?>
 <main class="container-fluid">
     <article>
         <section>
@@ -54,7 +54,7 @@ function reportUserInfo()
                 <P> Intranet :: It works! </p>
             </header>
             <P>Login gegevens:</P>
-
+            <h1></h1>
             <?
 
             /**

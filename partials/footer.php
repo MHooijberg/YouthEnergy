@@ -11,7 +11,7 @@
   // FIXME: remove plaintext passwords & databasename
   $user = 'website';       ///< the username to connect to the database
   $pass = 'wachtwoord';    ///< the password to connect to the database
-  $connection = new PDO('mysql:host=localhost;dbname=nrg', $user, $pass); ///< make the connection
+  $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
 
   $SQL = 'SELECT version FROM tbl_configuration;';
 

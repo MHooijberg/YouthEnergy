@@ -19,16 +19,18 @@
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<? include_once 'partials/navbarIndex.php'; ?>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+    <a class="navbar-brand" href="#">
+        <img src="/images/logo.png" width="30" height="30" alt="">
+    </a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/intranet" class="nav-link">Intranet</a></li>
+        <li class="nav-item"><a href="/klantgegevens.php" class="nav-link">klantgegevens</a></li>
+    </ul>
+</nav>
+<main class="container-fluid"></main>
+<!--<? include_once './partials/footer.php'; ?>-->
 
-<main class="container-fluid">
-    <article class="main">
-        <header><h1>Welkom bij onze website</h1></header>
-        <section>
-            Pietje puk test
-        </section>
-    </article>
-</main>
-<? include_once './partials/footer.php'; ?>
 </body>
 </html>

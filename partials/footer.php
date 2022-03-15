@@ -31,8 +31,7 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a href="/disclaimer.html" class="nav-link">Disclaimer</a></li>
             <li class="nav-item"><a href="/contact.html" class="nav-link">Contact</a></li>
+            <li class="nav-item"><a class="nav-link">Version <? echo $version ?></a></li>
         </ul>
-
     </nav>
-    <p style="width:100px">Version <? echo $version ?></p>
 </footer>

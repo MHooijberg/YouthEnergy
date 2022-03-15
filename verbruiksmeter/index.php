@@ -19,16 +19,12 @@
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<? include_once './partials/navbarIndex.php'; ?>
+<? include_once '../partials/navbarIndex.php'; ?>
 
 <main class="container-fluid">
-    <article class="main">
-        <header><h1>Welkom bij onze website</h1></header>
-        <section>
-            Pietje puk test
-        </section>
-    </article>
+hier komt de verbruiksmeter
 </main>
-<? include_once './partials/footer.php'; ?>
+
+<? include_once '../partials/footer.php'; ?>
 </body>
 </html>

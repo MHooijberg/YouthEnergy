@@ -9,5 +9,6 @@
         <li class="nav-item"><a href="/index.php" class="nav-link">Home</a></li>
         <li class="nav-item"><a href="/intranet" class="nav-link">Intranet</a></li>
         <li class="nav-item"><a href="/verbruiksmeter" class="nav-link">Verbruiksmeter</a></li>
+        <li class="nav-item"><a href="/Klantgegevens" class="nav-link">Klantgegevens</a></li>
     </ul>
 </nav>

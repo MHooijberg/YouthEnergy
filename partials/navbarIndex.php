@@ -8,5 +8,7 @@
     <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
         <li class="nav-item"><a href="/intranet" class="nav-link">Intranet</a></li>
+        <li class="nav-item"><a href="/intranet/KlantenService.php" class="nav-link">Klanten Service</a></li>
+
     </ul>
 </nav>

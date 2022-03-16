@@ -61,8 +61,6 @@ function reportUserInfo()
              * First the HTML
              */
             echo "<P>Gebruiker '" . $_SERVER["AUTHENTICATE_UID"] . "' ingelogd met wachtwoord '" . $_SERVER['PHP_AUTH_PW'] . "'</P>";
-
-
             ?>
         </section>
         <section>

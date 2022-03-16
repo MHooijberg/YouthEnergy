@@ -96,16 +96,13 @@ if (isset($_POST['requestKN'])) {
                             </div>
                         </div>
 
-                            <div class="row float-end">
-                                <div class="ruimteboven">
-                                    <form method="post">
+                        <div class="row float-end">
+                            <div class="ruimteboven">
+                                <form method="post">
                                     <button name="done" type="submit" class="btn-primary btn-lg btn">Done</button>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
-
-
-
+                        </div>
                     </div>
                     <div class="col-1"></div>
                 </div>

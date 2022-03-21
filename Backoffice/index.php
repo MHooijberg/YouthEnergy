@@ -22,7 +22,6 @@ $statement = $connection->prepare($BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE);
 $statement->execute();
 $result = $statement->fetchAll();
 
-
 ?>
 <!doctype html>
 <html lang="en">

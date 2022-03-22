@@ -15,107 +15,129 @@ if (isset($_POST['done'])) {
 if (isset($_POST['requestPH'])) {
     $postcode = $_POST['Postcode'];
     $huisnummer = $_POST['Huisnummer'];
-    $_SESSION["HasClient"] = 1;
 
     $user = 'website';       ///< the username to connect to the database
     $pass = 'wachtwoord';    ///< the password to connect to the database
     $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
 
-    $KLANTENSERVICE_READ_ADRES = "SELECT * FROM tbl_adressen WHERE a_postcode='$postcode' AND a_huisnummer='$huisnummer'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_ADRES);
-    $statement->execute();
-    $adres = $statement->fetch();
-    $_SESSION["adres"] = $adres;
-    $idadres = $adres["a_idAdres"];
+    $KLANTENSERVICE_READ_METERSTANDEN =
+        "SELECT ms_stand, mt_type 
+        FROM tbl_meters_standen 
+        JOIN tbl_meter_telwerken 
+            on ms_fk_idMeterTelwerk = mt_idMeterTelwerk
+        JOIN tbl_meters 
+            on mt_fk_idMeter = m_idMeter
+        JOIN tbl_adressen 
+            on m_fk_idAdres = a_idAdres
+        WHERE a_postcode = :postcode AND a_huisnummer = :huisnummer";
 
-    $KLANTENSERVICE_READ_KLANTGEGEVENS = "SELECT * FROM tbl_klanten WHERE k_fk_idAdres='$idadres'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_KLANTGEGEVENS);
-    $statement->execute();
-    $user = $statement->fetch();
-    $_SESSION["user"] = $user;
-
-    $KLANTENSERVICE_READ_METERID = "SELECT m_idMeter FROM tbl_meters WHERE m_fk_idAdres='$idadres'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_METERID);
-    $statement->execute();
-    $meterid = $statement->fetch();
-
-    $KLANTENSERVICE_READ_METER = "SELECT mt_type, mt_idMeterTelwerk FROM tbl_meter_telwerken WHERE mt_fk_idMeter='$meterid[m_idMeter]'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_METER);
-    $statement->execute();
-    $meter = $statement->fetch();
-    $metertelwerkid = $meter["mt_idMeterTelwerk"];
-
-    $KLANTENSERVICE_READ_METERSTANDEN = "SELECT ms_stand FROM tbl_meters_standen WHERE ms_fk_idMeterTelwerk='$metertelwerkid'";
     $statement = $connection->prepare($KLANTENSERVICE_READ_METERSTANDEN);
+    $statement->bindValue(':postcode', $postcode);
+    $statement->bindValue(':huisnummer', $huisnummer);
     $statement->execute();
     $meterstanden = $statement->fetchAll();
 
-    $_SESSION['meter'] = array();
-    $_SESSION["meter"]["type"] = $meter["mt_type"];
-    $metercount = count($meterstanden);
-    $_SESSION["meter"]["count"] = $metercount;
-    $ms_total = 0;
-    foreach ($meterstanden as $value){
-        $ms_total += $value["ms_stand"];
-    }
-    $ms_mid = intval($ms_mid = $ms_total / $metercount);
-    $_SESSION["meter"]["gemideld"] = $ms_mid;
+    if (!empty($meterstanden)){
+        //$_SESSION["meterstanden"] = $meterstanden;
 
-    // close connection
+        $_SESSION['meter'] = array();
+        $_SESSION["meter"]["type"] = $meterstanden[0]["mt_type"];
+        $metercount = count($meterstanden);
+        $_SESSION["meter"]["count"] = $metercount;
+        $ms_total = 0;
+        foreach ($meterstanden as $value){
+            $ms_total += $value["ms_stand"];
+        }
+        $ms_mid = intval($ms_mid = $ms_total / $metercount);
+        $_SESSION["meter"]["gemideld"] = $ms_mid;
+
+        $_SESSION["HasClient"] = 1;
+    }
+
+    $KLANTENSERVICE_READ_KLANTGEGEVENS = "
+        SELECT k_achternaam, k_voornaam, k_klantnummer, a_postcode, a_huisnummer, a_straatnaam
+        FROM tbl_klanten
+        JOIN tbl_adressen 
+            on k_fk_idAdres = a_idAdres
+        WHERE a_postcode = :postcode AND a_huisnummer = :huisnummer";
+
+    $statement = $connection->prepare($KLANTENSERVICE_READ_KLANTGEGEVENS);
+    $statement->bindValue(':postcode', $postcode);
+    $statement->bindValue(':huisnummer', $huisnummer);
+    $statement->execute();
+    $user = $statement->fetch();
+
+    if (!empty($meterstanden)) {
+        $_SESSION["user"]["voornaam"] = $user["k_voornaam"];
+        $_SESSION["user"]["achternaam"] = $user["k_achternaam"];
+        $_SESSION["user"]["klantnummer"] = $user["k_klantnummer"];
+        $_SESSION["user"]["postcode"] = $user["a_postcode"];
+        $_SESSION["user"]["huisnummer"] = $user["a_huisnummer"];
+        $_SESSION["user"]["straatnaam"] = $user["a_straatnaam"];
+    }
     $connection = null;
     $statement = null;
 }
 
 if (isset($_POST['requestKN'])) {
     $klantnummer = $_POST['Klantnummer'];
-    $_SESSION["HasClient"] = 1;
-
     $user = 'website';       ///< the username to connect to the database
     $pass = 'wachtwoord';    ///< the password to connect to the database
     $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
 
+    $KLANTENSERVICE_READ_METERSTANDEN =
+        "SELECT ms_stand, mt_type 
+        FROM tbl_meters_standen 
+        JOIN tbl_meter_telwerken 
+            on ms_fk_idMeterTelwerk = mt_idMeterTelwerk
+        JOIN tbl_meters 
+            on mt_fk_idMeter = m_idMeter
+        JOIN tbl_adressen 
+            on m_fk_idAdres = a_idAdres
+        JOIN tbl_klanten
+            on  k_fk_idAdres = a_idAdres
+        WHERE k_klantnummer = :klantnummer";
 
-    $KLANTENSERVICE_READ_KLANTGEGEVENS = "SELECT * FROM tbl_klanten WHERE k_klantnummer='$klantnummer'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_KLANTGEGEVENS);
-    $statement->execute();
-    $user = $statement->fetch();
-    $_SESSION["user"] = $user;
-
-    $KLANTENSERVICE_READ_ADRES = "SELECT * FROM tbl_adressen WHERE a_idAdres='$user[k_fk_idAdres]'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_ADRES);
-    $statement->execute();
-    $adres = $statement->fetch();
-    $_SESSION["adres"] = $adres;
-    $idadres = $adres["a_idAdres"];
-
-    $KLANTENSERVICE_READ_METERID = "SELECT m_idMeter FROM tbl_meters WHERE m_fk_idAdres='$idadres'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_METERID);
-    $statement->execute();
-    $meterid = $statement->fetch();
-
-    $KLANTENSERVICE_READ_METER = "SELECT mt_type, mt_idMeterTelwerk FROM tbl_meter_telwerken WHERE mt_fk_idMeter='$meterid[m_idMeter]'";
-    $statement = $connection->prepare($KLANTENSERVICE_READ_METER);
-    $statement->execute();
-    $meter = $statement->fetch();
-    $metertelwerkid = $meter["mt_idMeterTelwerk"];
-
-    $KLANTENSERVICE_READ_METERSTANDEN = "SELECT ms_stand FROM tbl_meters_standen WHERE ms_fk_idMeterTelwerk='$metertelwerkid'";
     $statement = $connection->prepare($KLANTENSERVICE_READ_METERSTANDEN);
+    $statement->bindValue(':klantnummer', $klantnummer);
     $statement->execute();
     $meterstanden = $statement->fetchAll();
 
-    $_SESSION['meter'] = array();
-    $_SESSION["meter"]["type"] = $meter["mt_type"];
-    $metercount = count($meterstanden);
-    $_SESSION["meter"]["count"] = $metercount;
-    $ms_total = 0;
-    foreach ($meterstanden as $value){
-        $ms_total += $value["ms_stand"];
-    }
-    $ms_mid = intval($ms_mid = $ms_total / $metercount);
-    $_SESSION["meter"]["gemideld"] = $ms_mid;
+    if (!empty($meterstanden)){
+        $_SESSION['meter'] = array();
+        $_SESSION["meter"]["type"] = $meterstanden[0]["mt_type"];
+        $metercount = count($meterstanden);
+        $_SESSION["meter"]["count"] = $metercount;
+        $ms_total = 0;
+        foreach ($meterstanden as $value){
+            $ms_total += $value["ms_stand"];
+        }
+        $ms_mid = intval($ms_mid = $ms_total / $metercount);
+        $_SESSION["meter"]["gemideld"] = $ms_mid;
 
-    // close connection
+        $_SESSION["HasClient"] = 1;
+    }
+
+    $KLANTENSERVICE_READ_KLANTGEGEVENS = "
+        SELECT k_achternaam, k_voornaam, k_klantnummer, a_postcode, a_huisnummer, a_straatnaam
+        FROM tbl_klanten
+        JOIN tbl_adressen 
+            on k_fk_idAdres = a_idAdres
+        WHERE k_klantnummer = :klantnummer";
+
+    $statement = $connection->prepare($KLANTENSERVICE_READ_KLANTGEGEVENS);
+    $statement->bindValue(':klantnummer', $klantnummer);
+    $statement->execute();
+    $user = $statement->fetch();
+
+    if (!empty($meterstanden)) {
+        $_SESSION["user"]["voornaam"] = $user["k_voornaam"];
+        $_SESSION["user"]["achternaam"] = $user["k_achternaam"];
+        $_SESSION["user"]["klantnummer"] = $user["k_klantnummer"];
+        $_SESSION["user"]["postcode"] = $user["a_postcode"];
+        $_SESSION["user"]["huisnummer"] = $user["a_huisnummer"];
+        $_SESSION["user"]["straatnaam"] = $user["a_straatnaam"];
+    }
     $connection = null;
     $statement = null;
 }
@@ -178,10 +200,10 @@ if (isset($_POST['requestKN'])) {
                     <div class="col-4 border">
                         <div>
                             <h5>Klant gegevens</h5>
-                            <p>Naam klant: <?=$_SESSION["user"]["k_voornaam"];?> <?=$_SESSION["user"]["k_achternaam"];?></p>
-                            <p>Klantnummer: <?=$_SESSION["user"]["k_klantnummer"];?></p>
-                            <p>Postcode: <?=$_SESSION["adres"]["a_postcode"];?></p>
-                            <p>Adres: <?=$_SESSION["adres"]["a_straatnaam"];?> <?=$_SESSION["adres"]["a_huisnummer"];?></p>
+                            <p>Naam klant: <?=$_SESSION["user"]["voornaam"];?> <?=$_SESSION["user"]["achternaam"];?></p>
+                            <p>Klantnummer: <?=$_SESSION["user"]["klantnummer"];?></p>
+                            <p>Postcode: <?=$_SESSION["user"]["postcode"];?></p>
+                            <p>Adres: <?=$_SESSION["user"]["straatnaam"];?> <?=$_SESSION["user"]["huisnummer"];?></p>
                         </div>
                     </div>
 

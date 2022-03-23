@@ -1,5 +1,5 @@
 <?php
-/** @file intranet/index.php
+/** @file intranet/Backoffice.php
  * Index for the intranet. Users need to logon using BasicAuth
  *
  * @author Martin Molema <martin.molema@nhlstenden.com>
@@ -38,7 +38,7 @@ function reportUserInfo()
     }
 }//reportUserInfo
 ?>
-<html>
+<html lang="en">
 <head>
     <title>Hello Intranet!</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">

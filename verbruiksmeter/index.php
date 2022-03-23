@@ -2,27 +2,32 @@
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
-$klantnummer = 1000450066;
+$klantnummer = 1575783258;
 
-$KLANT_READ_ADRES = "SELECT k_fk_idAdres FROM tbl_adressen WHERE k_klantnummer='$klantnummer'";
-$statement = $connection->prepare($KLANT_READ_ADRES);
-$statement->execute();
-$adres = $statement->fetch();
+// foreach($meterstand as $meter){
+//       echo '<h1>'.$meter["ms_stand"].' </h1>';
+//    }
 
-$KLANT_READ_METER = "SELECT m_idMeter FROM tbl_meters WHERE m_fk_idAdres='$adres'";
-$statement = $connection->prepare($KLANT_READ_METER);
+//SQL query voor laatst gemeten meterstand
+$KLANT_READ_METERSTAND = "SELECT ms_stand FROM tbl_meters_standen 
+JOIN tbl_meter_telwerken
+    on mt_fk_idMeter = mt_idMeterTelwerk
+JOIN tbl_meters
+    on m_fk_idAdres = m_idMeter
+JOIN tbl_klanten
+    on k_fk_idAdres = m_fk_idAdres
+WHERE k_klantnummer = :klantnummer 
+ORDER BY ms_datum DESC, ms_tijd DESC";
+$statement = $connection->prepare($KLANT_READ_METERSTAND);
+$statement->bindParam(':klantnummer', $klantnummer, PDO::PARAM_INT);
 $statement->execute();
-$meterid = $statement->fetch();
+$meterstand = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-$KLANT_READ_METERTELWERKEN = "SELECT mt_idMeterTelwerk FROM tbl_meter_telwerken WHERE mt_fk_idMeter='$meterid'";
-$statement = $connection->prepare($KLANT_READ_METER);
-$statement->execute();
-$metertelwerkid = $statement->fetch();
+//SQL query voor gemiddeld energie
+$KLANT_READ_GEMIDDELDE_METERSTAND_ENERGY = "
+";
 
-$KLANT_READ_METER = "SELECT ms_stand FROM tbl_meters_standen WHERE ms_fk_idMeterTelwerk='$metertelwerkid'";
-$statement = $connection->prepare($KLANT_READ_METER);
-$statement->execute();
-$metersstand = $statement->fetch();
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -32,6 +37,7 @@ $metersstand = $statement->fetch();
 <script src="verbruiksmeter.js"></script>
 </head>
 <body>
+
 <? include_once '../partials/navbarIndex.php'; ?>
 
 <main class="container-fluid">
@@ -47,6 +53,14 @@ $metersstand = $statement->fetch();
             },
             plotarea:{
                 marginTop:80
+            },
+            plot:{
+                size:'100%',
+                valueBox: {
+                    placement: 'center',
+                    values : [<?php echo $meterstand[0]["ms_stand"] ?>],
+                    fontSize:35,
+                }
             },
             tooltip:{
                 borderRadius:5
@@ -91,7 +105,7 @@ $metersstand = $statement->fetch();
             },
             series : [
                 {
-                    values : [<?php echo '8000' ?>], // starting value <- hier moeten values komen uit database
+                    values : [<?php echo $meterstand[0]["ms_stand"] ?>], // starting value <- hier moeten values komen uit database
                     backgroundColor:'black',
                     indicator:[10,10,10,10,0.75],
                     animation:{

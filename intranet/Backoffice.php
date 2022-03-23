@@ -140,7 +140,7 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 m-100">
             <table class="table table-striped">
                 <thead class="table-dark">
                 <tr>
@@ -209,8 +209,6 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
                         }
                         break;
                     default:
-
-
                 } ?>
 
                 </tbody>

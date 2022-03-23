@@ -1,5 +1,5 @@
 <?php
-/** @file Backoffice.php
+/** @file Klantgegevens.php
  * Index for the public website
  *
  * @author Martin Molema <martin.molema@nhlstenden.com>

@@ -70,10 +70,14 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
 <? include_once '../partials/navbarIndex.php'; ?>
 
 <main class="container-fluid">
+    <div class="d-flex justify-content-between">
     <div id='myChart'></div>
     <div id='myChart2'></div>
+    </div>
+    <div class="d-flex justify-content-between">
     <div id='myChart3'></div>
     <div id='myChart4'></div>
+    </div>
     <!--De onderstaande code is van een website genaamd zingchart.com.
     Doordat er niet op de gui werd beoordeeld hebben wij ervoor
     gekozen om een nette gui te kopieren om inplaats van deze zelf te schrijven.-->
@@ -394,7 +398,8 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
         });
     </script>
 </main>
-
+<div class="fixed-bottom">
 <? include_once '../partials/footer.php'; ?>
+</div>
 </body>
 </html>

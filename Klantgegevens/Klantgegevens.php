@@ -10,10 +10,13 @@ SELECT k_voornaam as voornaam,
        a_straatnaam as straatnaam,
        a_huisnummer as huisnummer,
        a_postcode as postcode,
-       a_plaatsnaam as plaatsnaam
+       a_plaatsnaam as plaatsnaam,
+       a_gemeente as gemeente,
+       a_provincie as provincie,
+       a_regio as regio
 FROM tbl_klanten
     JOIN tbl_adressen ta on tbl_klanten.k_fk_idAdres = ta.a_idAdres
-WHERE k_klantnummer = 2644654722");
+WHERE k_klantnummer = 3762477865");
 //$KLANT_READ_KLANTGEGEVENS->bindParam();
 $KLANT_READ_KLANTGEGEVENS->execute();
 $result_KLANT_READ_KLANTGEGEVENS = $KLANT_READ_KLANTGEGEVENS->fetchAll();
@@ -26,7 +29,7 @@ if (isset($_POST['get_voornaam'])) {
 $KLANT_UPDATE_VOORNAAM = $connection->prepare("
 UPDATE tbl_klanten
 SET k_voornaam = :voornaam
-WHERE k_klantnummer = '2644654722'");
+WHERE k_klantnummer = '3762477865'");
 $KLANT_UPDATE_VOORNAAM->bindParam(':voornaam', $input_voornaam);
 $KLANT_UPDATE_VOORNAAM->execute();
 
@@ -38,11 +41,40 @@ if (isset($_POST['get_achternaam'])) {
 $KLANT_UPDATE_ACHTERNAAM = $connection->prepare("
 UPDATE tbl_klanten
 SET k_achternaam = :achternaam
-WHERE k_klantnummer = '2644654722'");
+WHERE k_klantnummer = '3762477865'");
 $KLANT_UPDATE_ACHTERNAAM->bindParam(':achternaam', $input_achternaam);
 $KLANT_UPDATE_ACHTERNAAM->execute();
 
-//$KLANT_UPDATE_WOONGEGEVENS =
+if (isset($_POST['get_adresgegevens'])) {
+    $input_straatnaam = $_POST['straatnaam'];
+    $input_postcode =   $_POST['postcode'];
+    $input_plaatsnaam = $_POST['plaatsnaam'];
+    $input_gemeente =   $_POST['gemeente'];
+    $input_provincie =  $_POST['provincie'];
+    $input_regio =      $_POST['regio'];
+    $input_huisnummer = $_POST['huisnummer'];
+}
+$KLANT_UPDATE_ADRESGEGEVENS = $connection->prepare("
+UPDATE tbl_adressen
+JOIN tbl_klanten
+    on tbl_adressen.a_idAdres = tbl_klanten.k_fk_idAdres
+SET a_straatnaam = :straatnaam,
+    a_huisnummer = :huisnummer,
+    a_postcode = :postcode,
+    a_plaatsnaam = :plaatsnaam,
+    a_regio = :regio,
+    a_provincie = :provincie,
+    a_gemeente = :gemeente
+WHERE k_klantnummer='3762477865'");
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':straatnaam', $input_straatnaam);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':huisnummer', $input_huisnummer);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':postcode', $input_postcode);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':plaatsnaam', $input_plaatsnaam);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':regio', $input_regio);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':provincie', $input_provincie);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':gemeente', $input_gemeente);
+$KLANT_UPDATE_ADRESGEGEVENS->execute();
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -88,7 +120,8 @@ $KLANT_UPDATE_ACHTERNAAM->execute();
                                name="voornaam">
                         <input type="submit"
                                name="get_voornaam"
-                               value="aanpassen">
+                               value="aanpassen"
+                               class="btn btn-secondary">
                     </div>
                 </form>
                 <form method="post">
@@ -99,14 +132,15 @@ $KLANT_UPDATE_ACHTERNAAM->execute();
                                name="achternaam">
                         <input type="submit"
                                name="get_achternaam"
-                               value="aanpassen">
+                               value="aanpassen"
+                               class="btn btn-secondary">
                     </div>
                 </form>
             </div>
         </div>
 
         <div class="row d-flex justify-content-center p-3">
-            <div class="col-12 d-flex flex-column border border-dark rounded w-50">
+            <div class="col-6 d-flex flex-column border border-dark rounded w-25 m-3">
                 <h2>Jouw adresgegevens</h2>
                 <?php
                 $straatnaam = $result_KLANT_READ_KLANTGEGEVENS[0]['straatnaam'];
@@ -115,7 +149,56 @@ $KLANT_UPDATE_ACHTERNAAM->execute();
                 echo '<p> Adres: ' . $straatnaam . " " . $huisnummer . '</p>';
                 echo '<p> Postcode: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['postcode'] . '</p>';
                 echo '<p> Plaatsnaam: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['plaatsnaam'] . '</p>';
+                echo '<p> Gemeente: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['gemeente'] . '</p>';
+                echo '<p> Provincie: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['provincie'] . '</p>';
+                echo '<p> Regio: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['regio'] . '</p>';
                 ?>
+            </div>
+            <div class="col-6 d-flex flex-column border border-dark rounded w-25 m-3">
+                <h2>Aanpassen</h2>
+                <form method="post">
+                    <div class="form-group w-50">
+                        <label for="straatnaam">Straatnaam: </label>
+                        <input type="text"
+                               id="straatnaam"
+                               name="straatnaam">
+
+                        <label for="huisnummer">huismueer: </label>
+                        <input type="text"
+                               id="huisnummer"
+                               name="huisnummer">
+
+                        <label for="postcode">Postcode: </label>
+                        <input type="text"
+                               id="postcode"
+                               name="postcode">
+
+                        <label for="plaatsnaam">Plaatsnaam: </label>
+                        <input type="text"
+                               id="plaatsnaam"
+                               name="plaatsnaam">
+
+                        <label for="gemeente">Gemeente: </label>
+                        <input type="text"
+                               id="gemeente"
+                               name="gemeente">
+
+                        <label for="provincie">Provincie: </label>
+                        <input type="text"
+                               id="provincie"
+                               name="provincie">
+
+                        <label for="regio">Regio: </label>
+                        <input type="text"
+                               id="regio"
+                               name="regio">
+
+                        <input type="submit"
+                               name="get_adresgegevens"
+                               value="aanpassen"
+                               class="btn btn-secondary m-1">
+                    </div>
+                </form>
             </div>
         </div>
 

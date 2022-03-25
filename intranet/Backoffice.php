@@ -148,16 +148,16 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
                     <?php
                     switch ($_SESSION['geografische_eenheid']) {
                         case 1:
-                            echo '<th scope="col">' . "postcode" . '</th>';
+                            echo '<th scope="col">' . "Postcode" . '</th>';
                             break;
                         case 2:
-                            echo '<th scope="col">' . "plaatnaam" . '</th>';
+                            echo '<th scope="col">' . "Plaatnaam" . '</th>';
                             break;
                         case 3:
-                            echo '<th scope="col">' . "gemeente" . '</th>';
+                            echo '<th scope="col">' . "Gemeente" . '</th>';
                             break;
                         default:
-                            echo '<th scope="col">' . "zoek" . '</th>';
+                            echo '<th scope="col">' . "Zoek" . '</th>';
                     } ?>
                     <th scope="col">Datum</th>
                     <th scope="col">Product</th>

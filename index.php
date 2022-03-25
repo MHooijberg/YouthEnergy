@@ -1,5 +1,5 @@
 <?php
-/** @file Backoffice.php
+/** @file Klantgegevens.php
  * Index for the public website
  *
  * @author Martin Molema <martin.molema@nhlstenden.com>
@@ -25,7 +25,7 @@
     <article class="main">
         <header><h1>Welkom bij onze website</h1></header>
         <section>
-            Pietje puk test
+            Pietje puk test 123
         </section>
     </article>
 </main>

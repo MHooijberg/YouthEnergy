@@ -29,8 +29,8 @@
 <footer style="display: flex;flex-direction: row;align-items: center;justify-content: center">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a href="/disclaimer.html" class="nav-link">Disclaimer</a></li>
-            <li class="nav-item"><a href="/contact.html" class="nav-link">Contact</a></li>
+            <li class="nav-item"><a href="../partials/disclaimer.php" class="nav-link">Disclaimer</a></li>
+            <li class="nav-item"><a href="../partials/contact.php" class="nav-link">Contact</a></li>
             <li class="nav-item"><a class="nav-link">Version <? echo $version ?></a></li>
         </ul>
     </nav>

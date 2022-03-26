@@ -97,6 +97,40 @@ function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
     }
 }// CreateNewUser
 
+function CreateNewClient($lnk, $clientId, $password, $clientNumber)
+{
+    // setup an array with all the attributes needed to add a new user.
+    $clientFields = array();
+    $groupFields = array ();
+
+    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
+    $clientFields['objectClass'][] = "top";
+    $clientFields['objectClass'][] = "inetOrgPerson";
+    $clientFields['objectClass'][] = "person";
+    $clientFields['objectClass'][] = "organizationalPerson";
+
+    $clientFields['cn'] = $clientId;
+    $clientFields['sn'] = 'Client';
+    $clientFields['uid'] = $clientId;
+    $clientFields['employeeNumber'] = $clientNumber;
+
+    $userDN = "cn=".$clientId.",".USERS_EXTERN_DN;
+    $groupFields['uniqueMember'] = $userDN;
+
+    // Now do the actual adding of the object to the LDAP-service
+    if (ldap_add($lnk, $userDN, $clientFields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+    SetPassword($lnk, $userDN, $password);
+    if (ldap_mod_add($lnk, GROUPS_DN, $groupFields) == false){
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}// CreateNewClient
+
 /**
  * Changes or adds a new password for an existing user. Requires the Crypt-SHA-256 to be available as a hashing function
  * @param $lnk the connection to the LDAP server

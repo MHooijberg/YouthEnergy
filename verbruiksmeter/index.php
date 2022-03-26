@@ -1,8 +1,9 @@
 <?php
+session_start();
+$klantnummer = $_SESSION["klantnummer"];
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
-$klantnummer = 4209385884;
 
 //SQL query voor laatst gemeten meterstand
 $KLANT_READ_METERSTANDELEC = "SELECT ms_stand FROM tbl_meters_standen 

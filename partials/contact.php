@@ -16,8 +16,22 @@
 <main class="container-fluid">
     <article class="main">
         <header><h1>Contactgegevens met Youth Energy</h1></header>
-        <section>
-            <p>hier komen nog contactgegevens</p>
+        <section><br>
+
+            <h6>Leeuwarden (hoofdvestiging)<br>
+                De hoofdlocatie van Youth Energy vind je in Leeuwarden.<br></h6>
+            <br>
+            <h6>Adres   Youth Energy<br></h6>
+            <p>Van Alphenstraat 142<br>
+            8919 AC Leeuwarden<br>
+            info@YouthEnergy.com<br>
+            +31 050 123828444<br>
+                https://www.youthenergy.eu<br></p>
+
+            <h6>Postadres<br></h6>
+            <p>Postbus 1080<br>
+            8900 CB Leeuwarden<br></p>
+
         </section>
     </article>
 </main>

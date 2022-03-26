@@ -30,6 +30,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a href="../partials/disclaimer.php" class="nav-link">Disclaimer</a></li>
+            <li class="nav-item"><a href="../partials/privacyverklaring.php" class="nav-link">Privacy Verklaring</a></li>
             <li class="nav-item"><a href="../partials/contact.php" class="nav-link">Contact</a></li>
             <li class="nav-item"><a class="nav-link">Version <? echo $version ?></a></li>
         </ul>

@@ -25,7 +25,6 @@
     <article class="main">
         <header><h1>Welkom bij onze website</h1></header>
         <section>
-            Pietje puk test 123
         </section>
     </article>
 </main>

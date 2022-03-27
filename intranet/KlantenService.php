@@ -1,5 +1,11 @@
 <?php
-session_start();
+include_once "rbac_permissions_support.inc.php";
+
+$neededPermissions = array();
+$neededPermissions[] = "ReadKlantgegevensSingle";
+$neededPermissions[] = "ReadMeetgegevensSingle";
+ApproveOrRedirect($neededPermissions, true);
+
 if (!isset($_SESSION["HasClient"])) {
     $_SESSION["HasClient"] = 0;
 }

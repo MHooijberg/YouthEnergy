@@ -61,6 +61,79 @@ function AddUserToGroup($lnk, $groupDN, $userDN)
 }
 
 /**
+Mark
+ * Creates a new user.
+ *
+ * @param $lnk the connection to the LDAP server
+ * @param $newUserDN the complete Distinguished name (DN) of the user to be created
+ * @param $cn The Canonical name of the new user
+ * @param $sn The surname ("lastname") of the new user
+ * @param $uid The UserID of the new user; must be unique!
+ * @param $givenName The given name ("first name") of the new user
+ * @throws Exception If the user cannot be created an exception is thrown
+ */
+function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
+{
+
+    // setup an array with all the attributes needed to add a new user.
+    $fields = array();
+
+    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "inetOrgPerson";
+    $fields['objectClass'][] = "person";
+    $fields['objectClass'][] = "organizationalPerson";
+
+    $fields['cn'] = $cn;
+    $fields['sn'] = $sn;
+    $fields['uid'] = $uid;
+    $fields['givenName'] = $givenName;
+
+    echo "De gebruiker wordt aangemaakt op $newUserDN \n";
+
+    // Now do the actual adding of the object to the LDAP-service
+    if (ldap_add($lnk, $newUserDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}// CreateNewUser
+
+function CreateNewClient($lnk, $clientId, $password, $clientNumber)
+{
+    // setup an array with all the attributes needed to add a new user.
+    $clientFields = array();
+    $groupFields = array ();
+
+    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
+    $clientFields['objectClass'][] = "top";
+    $clientFields['objectClass'][] = "inetOrgPerson";
+    $clientFields['objectClass'][] = "person";
+    $clientFields['objectClass'][] = "organizationalPerson";
+
+    $clientFields['cn'] = $clientId;
+    $clientFields['sn'] = 'Client';
+    $clientFields['uid'] = $clientId;
+    $clientFields['employeeNumber'] = $clientNumber;
+
+    $userDN = "cn=".$clientId.",".USERS_EXTERN_DN;
+    $groupFields['uniqueMember'] = $userDN;
+
+    // Now do the actual adding of the object to the LDAP-service
+    if (ldap_add($lnk, $userDN, $clientFields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+    SetPassword($lnk, $userDN, $password);
+    if (ldap_mod_add($lnk, GROUPS_DN, $groupFields) == false){
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}// CreateNewClient
+
+/**
  * Changes or adds a new password for an existing user. Requires the Crypt-SHA-256 to be available as a hashing function
  * @param $lnk the connection to the LDAP server
  * @param $newUserDN the complete Distinguished name (DN) of the user to be created
@@ -216,44 +289,6 @@ function GetUserDNFromUID($lnk, $uid) {
         return null;
     }
 }// GetUserDNFromUID
-
-/**
- * Creates a new user.
- *
- * @param $lnk the connection to the LDAP server
- * @param $newUserDN the complete Distinguished name (DN) of the user to be created
- * @param $cn The Canonical name of the new user
- * @param $sn The surname ("lastname") of the new user
- * @param $uid The UserID of the new user; must be unique!
- * @param $givenName The given name ("first name") of the new user
- * @throws Exception If the user cannot be created an exception is thrown
- */
-function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
-{
-
-    // setup an array with all the attributes needed to add a new user.
-    $fields = array();
-
-    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
-    $fields['objectClass'][] = "top";
-    $fields['objectClass'][] = "inetOrgPerson";
-    $fields['objectClass'][] = "person";
-    $fields['objectClass'][] = "organizationalPerson";
-
-    $fields['cn'] = $cn;
-    $fields['sn'] = $sn;
-    $fields['uid'] = $uid;
-    $fields['givenName'] = $givenName;
-
-    echo "De gebruiker wordt aangemaakt op $newUserDN \n";
-
-    // Now do the actual adding of the object to the LDAP-service
-    if (ldap_add($lnk, $newUserDN, $fields) === false) {
-        $error = ldap_error($lnk);
-        $errno = ldap_errno($lnk);
-        throw new Exception($error, $errno);
-    }
-}// CreateNewUser
 
 /**
  * Creates a new role.

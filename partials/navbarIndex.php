@@ -12,5 +12,6 @@
         <li class="nav-item"><a href="/Klantgegevens/Klantgegevens.php" class="nav-link">Klantgegevens</a></li>
         <li class="nav-item"><a href="/intranet/Backoffice.php"         class="nav-link">Backoffice</a> </li>
         <li class="nav-item"><a href="/intranet/KlantenService.php"     class="nav-link">Klantenservice</a></li>
+        <li class="nav-item"><a href="/intranet/ICT.php"                class="nav-link">ICT</a></li>
     </ul>
 </nav>

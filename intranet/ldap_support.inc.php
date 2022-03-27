@@ -1,3 +1,4 @@
+
 <?php
 /** @file ldap_support.inc.php
  * Lots of documented LDAP function
@@ -58,44 +59,6 @@ function AddUserToGroup($lnk, $groupDN, $userDN)
         throw new Exception($error, $errno);
     }
 }
-
-/**
- * Creates a new user.
- *
- * @param $lnk the connection to the LDAP server
- * @param $newUserDN the complete Distinguished name (DN) of the user to be created
- * @param $cn The Canonical name of the new user
- * @param $sn The surname ("lastname") of the new user
- * @param $uid The UserID of the new user; must be unique!
- * @param $givenName The given name ("first name") of the new user
- * @throws Exception If the user cannot be created an exception is thrown
- */
-function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
-{
-
-    // setup an array with all the attributes needed to add a new user.
-    $fields = array();
-
-    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
-    $fields['objectClass'][] = "top";
-    $fields['objectClass'][] = "inetOrgPerson";
-    $fields['objectClass'][] = "person";
-    $fields['objectClass'][] = "organizationalPerson";
-
-    $fields['cn'] = $cn;
-    $fields['sn'] = $sn;
-    $fields['uid'] = $uid;
-    $fields['givenName'] = $givenName;
-
-    echo "De gebruiker wordt aangemaakt op $newUserDN \n";
-
-    // Now do the actual adding of the object to the LDAP-service
-    if (ldap_add($lnk, $newUserDN, $fields) === false) {
-        $error = ldap_error($lnk);
-        $errno = ldap_errno($lnk);
-        throw new Exception($error, $errno);
-    }
-}// CreateNewUser
 
 /**
  * Changes or adds a new password for an existing user. Requires the Crypt-SHA-256 to be available as a hashing function
@@ -253,3 +216,125 @@ function GetUserDNFromUID($lnk, $uid) {
         return null;
     }
 }// GetUserDNFromUID
+
+/**
+ * Creates a new user.
+ *
+ * @param $lnk the connection to the LDAP server
+ * @param $newUserDN the complete Distinguished name (DN) of the user to be created
+ * @param $cn The Canonical name of the new user
+ * @param $sn The surname ("lastname") of the new user
+ * @param $uid The UserID of the new user; must be unique!
+ * @param $givenName The given name ("first name") of the new user
+ * @throws Exception If the user cannot be created an exception is thrown
+ */
+function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
+{
+
+    // setup an array with all the attributes needed to add a new user.
+    $fields = array();
+
+    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "inetOrgPerson";
+    $fields['objectClass'][] = "person";
+    $fields['objectClass'][] = "organizationalPerson";
+
+    $fields['cn'] = $cn;
+    $fields['sn'] = $sn;
+    $fields['uid'] = $uid;
+    $fields['givenName'] = $givenName;
+
+    echo "De gebruiker wordt aangemaakt op $newUserDN \n";
+
+    // Now do the actual adding of the object to the LDAP-service
+    if (ldap_add($lnk, $newUserDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}// CreateNewUser
+
+/**
+ * Creates a new role.
+ *
+ * @param $lnk the connection to the LDAP server
+ * @param $newRoleDN the complete Distinguished name (DN) of the role to be created
+ * @param $cn The Canonical name of the new role
+ * @throws Exception If the role cannot be created an exception is thrown
+ */
+function CreateNewRole($lnk, $newRoleDN, $cn)
+{
+    $fields = array();
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "inetOrgPerson";
+    $fields['objectClass'][] = "person";
+    $fields['objectClass'][] = "organizationalPerson";
+
+    $fields['cn'] = $cn . "medewerker";
+    $fields['sn'] = $cn;
+    $fields['uid'] = $fields['cn'];
+
+    $newUserDN = "cn=" . $fields['cn'] . "," .USERS_INTERN_DN;
+
+    if (ldap_add($lnk, $newUserDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+    $fields = array();
+
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "groupOfUniqueNames";
+    $fields['cn'] = $cn;
+    $fields['uniqueMember'] = $newUserDN;
+
+    if (ldap_add($lnk, $newRoleDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+}
+function GetAllRoles($lnk){
+    $these = array("cn");
+    $ldapRes = ldap_search($lnk, USERS_INTERN_DN, "(&(objectClass=groupOfUniqueNames))", $these);
+    $results = ldap_get_entries($lnk, $ldapRes);
+    return $results;
+}
+
+/**
+ * @throws Exception
+ */
+function DeleteRol($lnk, $role){
+
+    $RoleToDelete = "cn=" . $role . "," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $RoleToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+    $MedewerkerToDelete = "cn=" . $role . "medewerker," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $MedewerkerToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}
+
+/**
+ * @throws Exception
+ */
+function RemoveRolFromUser($lnk, $rolDN, $userDN){
+    if (ldap_mod_del($lnk, $rolDN, $userDN) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}

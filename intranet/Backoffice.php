@@ -1,9 +1,19 @@
 <?php
+// ToDo: Bespreken willen we de pagina laten zien als de gebruiker op de een of andere manier maar 1 van de 4 permissies hebt?
+// ToDo: Willen we de verschillende invoervelden beveiligen voor elke rol of alleen de pagina?
+include_once "rbac_permissions_support.inc.php";
+
+$neededPermissions = array();
+$neededPermissions[] = "ReadMeetgegevensPostcode";
+$neededPermissions[] = "ReadMeetgegevensGemeente";
+$neededPermissions[] = "ReadMeetgegevensPlaatsnaam";
+$neededPermissions[] = "ReadMeetgegevensStraat";
+ApproveOrRedirect($neededPermissions, true);
+
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
 
-session_start();
 if (!isset($_SESSION["geografische_eenheid"])) {
     $_SESSION["geografische_eenheid"] = 0;
 }

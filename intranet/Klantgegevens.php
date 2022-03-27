@@ -1,7 +1,15 @@
 <?php
+include_once "rbac_permissions_support.inc.php";
+
+$neededPermissions = array();
+$neededPermissions[] = "ReadOwnKlantgegevens";
+$neededPermissions[] = "EditOwnKlantgegevens";
+ApproveOrRedirect($neededPermissions, true);
+
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
+$klantnummer = $_SESSION['klantnummer'];
 
 $KLANT_READ_KLANTGEGEVENS = $connection->prepare("
 SELECT k_voornaam as voornaam,
@@ -16,8 +24,8 @@ SELECT k_voornaam as voornaam,
        a_regio as regio
 FROM tbl_klanten
     JOIN tbl_adressen ta on tbl_klanten.k_fk_idAdres = ta.a_idAdres
-WHERE k_klantnummer = 3762477865");
-//$KLANT_READ_KLANTGEGEVENS->bindParam();
+WHERE k_klantnummer = :klantnummer");
+$KLANT_READ_KLANTGEGEVENS->bindParam(':klantnummer', $klantnummer);
 $KLANT_READ_KLANTGEGEVENS->execute();
 $result_KLANT_READ_KLANTGEGEVENS = $KLANT_READ_KLANTGEGEVENS->fetchAll();
 
@@ -29,8 +37,9 @@ if (isset($_POST['get_voornaam'])) {
 $KLANT_UPDATE_VOORNAAM = $connection->prepare("
 UPDATE tbl_klanten
 SET k_voornaam = :voornaam
-WHERE k_klantnummer = '3762477865'");
+WHERE k_klantnummer = :klantnummer");
 $KLANT_UPDATE_VOORNAAM->bindParam(':voornaam', $input_voornaam);
+$KLANT_UPDATE_VOORNAAM->bindParam(':klantnummer', $klantnummer);
 $KLANT_UPDATE_VOORNAAM->execute();
 
 //klant aanpassen achternaam
@@ -41,8 +50,9 @@ if (isset($_POST['get_achternaam'])) {
 $KLANT_UPDATE_ACHTERNAAM = $connection->prepare("
 UPDATE tbl_klanten
 SET k_achternaam = :achternaam
-WHERE k_klantnummer = '3762477865'");
+WHERE k_klantnummer = :klantnummer");
 $KLANT_UPDATE_ACHTERNAAM->bindParam(':achternaam', $input_achternaam);
+$KLANT_UPDATE_ACHTERNAAM->bindParam(':klantnummer', $klantnummer);
 $KLANT_UPDATE_ACHTERNAAM->execute();
 
 if (isset($_POST['get_adresgegevens'])) {
@@ -65,7 +75,7 @@ SET a_straatnaam = :straatnaam,
     a_regio = :regio,
     a_provincie = :provincie,
     a_gemeente = :gemeente
-WHERE k_klantnummer='3762477865'");
+WHERE k_klantnummer= :klantnummer");
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':straatnaam', $input_straatnaam);
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':huisnummer', $input_huisnummer);
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':postcode', $input_postcode);
@@ -73,6 +83,7 @@ $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':plaatsnaam', $input_plaatsnaam);
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':regio', $input_regio);
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':provincie', $input_provincie);
 $KLANT_UPDATE_ADRESGEGEVENS->bindParam(':gemeente', $input_gemeente);
+$KLANT_UPDATE_ADRESGEGEVENS->bindParam(':klantnummer', $klantnummer);
 $KLANT_UPDATE_ADRESGEGEVENS->execute();
 
 ?>

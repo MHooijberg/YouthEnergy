@@ -15,7 +15,7 @@
     <body>
         <? include_once 'partials/navbarIndex.php'; ?>
         <main class="mx-5">
-            <form id="AccountKoppelen" method="post" action="MaakKlantAccountAan.php">
+            <form id="AccountKoppelen" method="post" action="koppel account.php">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">

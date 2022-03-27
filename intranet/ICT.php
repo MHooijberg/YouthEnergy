@@ -1,5 +1,12 @@
 <?php
-session_start();
+include_once "rbac_permissions_support.inc.php";
+
+$neededPermissions = array();
+$neededPermissions[] = "CreateRol";
+$neededPermissions[] = "EditRole";
+$neededPermissions[] = "DeleteRole";
+ApproveOrRedirect($neededPermissions, true);
+
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass);
@@ -93,9 +100,6 @@ if (isset($_POST['done'])) {
 
         $statement->execute();
     }
-
-    include_once "ldap_constants.inc.php";
-    include_once "ldap_support.inc.php";
 
     try {
         $lnk = ConnectAndCheckLDAP();

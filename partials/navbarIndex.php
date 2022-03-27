@@ -26,6 +26,10 @@ if (session_status() == PHP_SESSION_NONE){
                     $klantenservice = ($permissions['ReadKlantgegevensSingle'] == true |
                         $permissions['ReadMeetgegevensSingle'] == true
                     );
+                    $ict = ($permissions['CreateRol'] == true |
+                        $permissions['EditRole'] == true |
+                        $permissions['DeleteRole'] == true
+                    );
                     if ($verbruiksmeter){
                         echo '<li class="nav-item"><a href="/intranet/verbruiksmeter.php" class="nav-link">Verbruiksmeter</a></li>';
                     }
@@ -37,6 +41,9 @@ if (session_status() == PHP_SESSION_NONE){
                     }
                     if ($klantenservice){
                         echo '<li class="nav-item"><a href="/intranet/KlantenService.php"class="nav-link">Klantenservice</a></li>';
+                    }
+                    if ($ict){
+                        echo '<li class="nav-item"><a href="/intranet/ICT.php"class="nav-link">ICT</a></li>';
                     }
                 }
             }

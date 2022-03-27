@@ -74,14 +74,30 @@ GROUP BY a_gemeente, ms_datum, m_product;");
 $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->bindParam(':gemeente', $input_gemeente);
 $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->execute();
 $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->fetchAll();
+
+if (isset($_POST['export']))
+{
+    $file_name = "export_aantal_meters_" . date('Y-m-d') . "xls";
+    $fields = array('#', 'geografische eenheid', 'Datum', 'Product', 'Aantal Meters');
+    $excel_data = implode("\t", array_values($fields)) . "\n";
+
+    foreach ($result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE as $result) {
+        $linedata = array($result['postcode'], $result['datum'], $result['product'], $result['aantalMeterstanden']);
+    }
+    $excel_data .= implode("\t", array_values($linedata)) . "\n";
+
+    header("Content-Type: application/vnd.ms-excel");
+    header("Content-Disposition: attachment; filename=\"$file_name\"");
+}
+
 ?>
 
-<!doctype html>
-<html lang="en">
+    <!doctype html>
+    <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Backoffice - Youth Energy</title>
+    <title>Verkoop - Youth Energy</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -93,47 +109,61 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
     <div class="container-fluid"
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <h1>BACK-OFFICE</h1>
+            <h1>Verkoop</h1>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-4">
+        <div class="col-3">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="postcode">Postcode:</label>
+                    <label for="postcode">Postcode:</label> <br>
                     <input type="text"
                            id="postcode"
                            name="postcode">
                     <input type="submit"
                            name="get_postcode"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
                 </div>
             </form>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="plaatsnaam">Plaatsnaam:</label>
+                    <label for="plaatsnaam">Plaatsnaam:</label> <br>
                     <input type="text"
                            id="plaatsnaam"
                            name="plaatsnaam">
                     <input type="submit"
                            name="get_plaatsnaam"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
                 </div>
             </form>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="gemeente">Gemeente:</label>
+                    <label for="gemeente">Gemeente:</label> <br>
                     <input type="text"
                            id="gemeente"
                            name="gemeente">
                     <input type="submit"
                            name="get_gemeente"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+        <div class="col-3">
+            <form method="post">
+                <div class="form-group m-3 p-3">
+                    <label>Exporteer: </label> <br>
+                    <input type="submit"
+                           name="export"
+                           value="Exporteer"
+                           class="btn btn-warning">
                 </div>
             </form>
         </div>
@@ -220,4 +250,4 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
 
 <?php include_once '../partials/footer.php'; ?>
 </body>
-</html>
+    </html><?php

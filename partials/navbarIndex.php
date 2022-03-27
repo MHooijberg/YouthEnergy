@@ -9,8 +9,9 @@
         <li class="nav-item"><a href="/index.php"                       class="nav-link">Home</a></li>
         <li class="nav-item"><a href="/intranet"                        class="nav-link">Intranet</a></li>
         <li class="nav-item"><a href="/verbruiksmeter"                  class="nav-link">Verbruiksmeter</a></li>
-        <li class="nav-item"><a href="/Klantgegevens/Klantgegevens.php" class="nav-link">Klantgegevens</a></li>
+        <li class="nav-item"><a href="/intranet/Klantgegevens.php"      class="nav-link">Klantgegevens</a></li>
         <li class="nav-item"><a href="/intranet/Backoffice.php"         class="nav-link">Backoffice</a> </li>
+        <li class="nav-item"><a href="/intranet/Verkoop.php"            class="nav-link">Verkoop</a> </li>
         <li class="nav-item"><a href="/intranet/KlantenService.php"     class="nav-link">Klantenservice</a></li>
     </ul>
 </nav>

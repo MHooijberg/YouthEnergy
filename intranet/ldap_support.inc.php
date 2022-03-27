@@ -1,3 +1,4 @@
+
 <?php
 /** @file ldap_support.inc.php
  * Lots of documented LDAP function
@@ -60,6 +61,7 @@ function AddUserToGroup($lnk, $groupDN, $userDN)
 }
 
 /**
+Mark
  * Creates a new user.
  *
  * @param $lnk the connection to the LDAP server
@@ -287,3 +289,87 @@ function GetUserDNFromUID($lnk, $uid) {
         return null;
     }
 }// GetUserDNFromUID
+
+/**
+ * Creates a new role.
+ *
+ * @param $lnk the connection to the LDAP server
+ * @param $newRoleDN the complete Distinguished name (DN) of the role to be created
+ * @param $cn The Canonical name of the new role
+ * @throws Exception If the role cannot be created an exception is thrown
+ */
+function CreateNewRole($lnk, $newRoleDN, $cn)
+{
+    $fields = array();
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "inetOrgPerson";
+    $fields['objectClass'][] = "person";
+    $fields['objectClass'][] = "organizationalPerson";
+
+    $fields['cn'] = $cn . "medewerker";
+    $fields['sn'] = $cn;
+    $fields['uid'] = $fields['cn'];
+
+    $newUserDN = "cn=" . $fields['cn'] . "," .USERS_INTERN_DN;
+
+    if (ldap_add($lnk, $newUserDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+    $fields = array();
+
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "groupOfUniqueNames";
+    $fields['cn'] = $cn;
+    $fields['uniqueMember'] = $newUserDN;
+
+    if (ldap_add($lnk, $newRoleDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+}
+function GetAllRoles($lnk){
+    $these = array("cn");
+    $ldapRes = ldap_search($lnk, USERS_INTERN_DN, "(&(objectClass=groupOfUniqueNames))", $these);
+    $results = ldap_get_entries($lnk, $ldapRes);
+    return $results;
+}
+
+/**
+ * @throws Exception
+ */
+function DeleteRol($lnk, $role){
+
+    $RoleToDelete = "cn=" . $role . "," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $RoleToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+    $MedewerkerToDelete = "cn=" . $role . "medewerker," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $MedewerkerToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}
+
+/**
+ * @throws Exception
+ */
+function RemoveRolFromUser($lnk, $rolDN, $userDN){
+    if (ldap_mod_del($lnk, $rolDN, $userDN) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}

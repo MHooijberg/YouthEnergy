@@ -1,4 +1,3 @@
-
 <?php
 /** @file ldap_support.inc.php
  * Lots of documented LDAP function
@@ -22,7 +21,6 @@
  * @throws Exception
  */
 function ConnectAndCheckLDAP() {
-
 // connect to the service
     $lnk = ldap_connect(LDAP_HOST, LDAP_PORT);
 
@@ -39,7 +37,6 @@ function ConnectAndCheckLDAP() {
             throw(new Exception("Cannot bind using user " . LDAP_ADMIN_CN));
         }
     }
-
     return $lnk;
 }
 

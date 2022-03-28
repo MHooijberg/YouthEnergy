@@ -57,11 +57,11 @@ $KLANT_UPDATE_ACHTERNAAM->execute();
 
 if (isset($_POST['get_adresgegevens'])) {
     $input_straatnaam = $_POST['straatnaam'];
-    $input_postcode =   $_POST['postcode'];
+    $input_postcode = $_POST['postcode'];
     $input_plaatsnaam = $_POST['plaatsnaam'];
-    $input_gemeente =   $_POST['gemeente'];
-    $input_provincie =  $_POST['provincie'];
-    $input_regio =      $_POST['regio'];
+    $input_gemeente = $_POST['gemeente'];
+    $input_provincie = $_POST['provincie'];
+    $input_regio = $_POST['regio'];
     $input_huisnummer = $_POST['huisnummer'];
 }
 $KLANT_UPDATE_ADRESGEGEVENS = $connection->prepare("
@@ -105,9 +105,11 @@ $KLANT_UPDATE_ADRESGEGEVENS->execute();
             <div class="col-12 d-flex flex-column border border-dark rounded w-50">
                 <h2>Mijn meterstanden aanvragen</h2>
                 <p>vraag hier je meterstanden aan</p>
-                <input type="button"
-                       class="btn btn-primary btn-lg m-3"
-                       value="Aanvragen">
+                <a href="verbruiksmeter.php">
+                    <input type="button"
+                           class="btn btn-primary btn-lg m-3"
+                           value="Aanvragen">
+                </a>
             </div>
         </div>
 
@@ -117,7 +119,7 @@ $KLANT_UPDATE_ADRESGEGEVENS->execute();
                 <?php
                 echo '<p> Voornaam: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['voornaam'] . '</p>';
                 echo '<p> Achternaam: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['achternaam'] . '</p>';
-                echo '<p> Email: ';
+                echo '<p> Email: ' . $_SERVER["AUTHENTICATE_UID"] . "</p>";
                 echo '<p> Klantnummer: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['klantnummer'] . '</p>';
                 ?>
             </div>

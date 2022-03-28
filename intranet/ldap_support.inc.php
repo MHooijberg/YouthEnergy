@@ -21,7 +21,6 @@
  * @throws Exception
  */
 function ConnectAndCheckLDAP() {
-
 // connect to the service
     $lnk = ldap_connect(LDAP_HOST, LDAP_PORT);
 
@@ -38,7 +37,6 @@ function ConnectAndCheckLDAP() {
             throw(new Exception("Cannot bind using user " . LDAP_ADMIN_CN));
         }
     }
-
     return $lnk;
 }
 
@@ -60,6 +58,7 @@ function AddUserToGroup($lnk, $groupDN, $userDN)
 }
 
 /**
+Mark
  * Creates a new user.
  *
  * @param $lnk the connection to the LDAP server
@@ -96,6 +95,40 @@ function CreateNewUser($lnk, $newUserDN, $cn, $sn, $uid, $givenName)
         throw new Exception($error, $errno);
     }
 }// CreateNewUser
+
+function CreateNewClient($lnk, $clientId, $password, $clientNumber)
+{
+    // setup an array with all the attributes needed to add a new user.
+    $clientFields = array();
+    $groupFields = array ();
+
+    // first indicate what kind of object we want te create ("Objectclass"). Multivalue attribute!!
+    $clientFields['objectClass'][] = "top";
+    $clientFields['objectClass'][] = "inetOrgPerson";
+    $clientFields['objectClass'][] = "person";
+    $clientFields['objectClass'][] = "organizationalPerson";
+
+    $clientFields['cn'] = $clientId;
+    $clientFields['sn'] = 'Client';
+    $clientFields['uid'] = $clientId;
+    $clientFields['employeeNumber'] = $clientNumber;
+
+    $userDN = "cn=".$clientId.",".USERS_EXTERN_DN;
+    $groupFields['uniqueMember'] = $userDN;
+
+    // Now do the actual adding of the object to the LDAP-service
+    if (ldap_add($lnk, $userDN, $clientFields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+    SetPassword($lnk, $userDN, $password);
+    if (ldap_mod_add($lnk, GROUPS_DN, $groupFields) == false){
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}// CreateNewClient
 
 /**
  * Changes or adds a new password for an existing user. Requires the Crypt-SHA-256 to be available as a hashing function
@@ -253,3 +286,87 @@ function GetUserDNFromUID($lnk, $uid) {
         return null;
     }
 }// GetUserDNFromUID
+
+/**
+ * Creates a new role.
+ *
+ * @param $lnk the connection to the LDAP server
+ * @param $newRoleDN the complete Distinguished name (DN) of the role to be created
+ * @param $cn The Canonical name of the new role
+ * @throws Exception If the role cannot be created an exception is thrown
+ */
+function CreateNewRole($lnk, $newRoleDN, $cn)
+{
+    $fields = array();
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "inetOrgPerson";
+    $fields['objectClass'][] = "person";
+    $fields['objectClass'][] = "organizationalPerson";
+
+    $fields['cn'] = $cn . "medewerker";
+    $fields['sn'] = $cn;
+    $fields['uid'] = $fields['cn'];
+
+    $newUserDN = "cn=" . $fields['cn'] . "," .USERS_INTERN_DN;
+
+    if (ldap_add($lnk, $newUserDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+    $fields = array();
+
+    $fields['objectClass'][] = "top";
+    $fields['objectClass'][] = "groupOfUniqueNames";
+    $fields['cn'] = $cn;
+    $fields['uniqueMember'] = $newUserDN;
+
+    if (ldap_add($lnk, $newRoleDN, $fields) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+
+}
+function GetAllRoles($lnk){
+    $these = array("cn");
+    $ldapRes = ldap_search($lnk, USERS_INTERN_DN, "(&(objectClass=groupOfUniqueNames))", $these);
+    $results = ldap_get_entries($lnk, $ldapRes);
+    return $results;
+}
+
+/**
+ * @throws Exception
+ */
+function DeleteRol($lnk, $role){
+
+    $RoleToDelete = "cn=" . $role . "," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $RoleToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+
+    $MedewerkerToDelete = "cn=" . $role . "medewerker," . USERS_INTERN_DN;
+
+    if (ldap_delete($lnk, $MedewerkerToDelete) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}
+
+/**
+ * @throws Exception
+ */
+function RemoveRolFromUser($lnk, $rolDN, $userDN){
+    if (ldap_mod_del($lnk, $rolDN, $userDN) === false) {
+        $error = ldap_error($lnk);
+        $errno = ldap_errno($lnk);
+        throw new Exception($error, $errno);
+    }
+}

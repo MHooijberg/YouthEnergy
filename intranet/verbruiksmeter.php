@@ -1,9 +1,15 @@
 <?php
-session_start();
-$klantnummer = $_SESSION["klantnummer"];
+include_once "rbac_permissions_support.inc.php";
+
+$neededPermissions = array();
+$neededPermissions[] = "ReadOwnVerbruiksmeter";
+ApproveOrRedirect($neededPermissions, true);
+
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
+$klantnummer = $_SESSION['klantnummer'];
+
 
 //SQL query voor laatst gemeten meterstand
 $KLANT_READ_METERSTANDELEC = "SELECT ms_stand FROM tbl_meters_standen 
@@ -62,9 +68,9 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
 <!doctype html>
 <html lang="en">
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="css/index.css" rel="stylesheet">
+<link href="css/verbruiksmeter.css" rel="stylesheet">
 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="verbruiksmeter.js"></script>
+<script src="js/verbruiksmeter.js"></script>
 </head>
 <body>
 

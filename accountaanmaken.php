@@ -55,7 +55,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="privacy" id="privacy" required>
-                            <label class="form-check-label" for="privacy">Ik ga akkord met de privacy verklaring.</label>
+                            <label class="form-check-label" for="privacy">Ik ga akkoord met de privacy verklaring.</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="CodeCheck" required>
@@ -144,6 +144,8 @@
                 </div>
             </div>
         </main>
+        <div class="fixed-bottom">
         <? include_once 'partials/footer.php'; ?>
+        </div>
     </body>
 </html>

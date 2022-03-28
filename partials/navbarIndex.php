@@ -59,6 +59,5 @@ if (session_status() == PHP_SESSION_NONE){
                 echo '<li class="nav-item"><a href="/accountaanmaken.php" class="nav-link">Account Aanvragen</a></li>';
             }
         ?>
-        <li class="nav-item"><a href="../partials/contact.php" class="nav-link">Contact</a></li>
     </ul>
 </nav>

@@ -76,7 +76,10 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
 
 <? include_once '../partials/navbarIndex.php'; ?>
 
-<main class="container-fluid">
+<main class="container-fluid"><br>
+    <h1>Verbruiksmeter</h1>
+    <h5>De ondestaande meetgegevens zijn de actuele gegevens die wij uit de database halen.<br>
+        Hieronder staan verschillende meterstanden met de bijbehorende gegevens:</h5><br>
     <div class="d-flex justify-content-between">
     <div id='myChart'></div>
     <div id='myChart2'></div>
@@ -101,8 +104,8 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
                 size:'100%',
                 valueBox: {
                     placement: 'center',
-                    text: 'Laatst gemeten Gasverbruik:<br><?php echo $meterstandGas[0]["ms_stand"] ?>',
-                    fontSize: 20,
+                    text: 'De meetgegevens van het laatst <br> Gemeten Gas verbruik:<br><?php echo $meterstandGas[0]["ms_stand"] ?>',
+                    fontSize: 18,
                 }
             },
             tooltip:{
@@ -180,8 +183,8 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
                 size:'100%',
                 valueBox: {
                     placement: 'center',
-                    text: 'Laatst gemeten Electriciteitsverbruik:<br><?php echo $meterstandElec[0]["ms_stand"] ?>',
-                    fontSize:17,
+                    text: 'De meetgegevens van het laatst <br> Gemeten Energie verbruik:<br><?php echo $meterstandElec[0]["ms_stand"] ?>',
+                    fontSize:18,
                 }
             },
             tooltip:{
@@ -259,8 +262,8 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
                 size:'100%',
                 valueBox: {
                     placement: 'center',
-                    text: 'Gemiddeld Gasverbruik:<br><?php echo $ms_midGas ?>',
-                    fontSize:20,
+                    text: 'De meetgegevens van het gemiddelde <br> Gas verbruik:<br><?php echo $ms_midGas ?>',
+                    fontSize:16,
                 }
             },
             tooltip:{
@@ -338,8 +341,8 @@ $ms_midGas = intval($ms_midGas = $ms_total / $ms_count);
                 size:'100%',
                 valueBox: {
                     placement: 'center',
-                    text: 'Gemiddeld Electriciteitsverbruik:<br><?php echo $ms_midElec ?>',
-                    fontSize:19,
+                    text: 'De meetgegevens van het gemiddelde <br> Energie verbruik:<br><?php echo $ms_midElec ?>',
+                    fontSize:16,
                 }
             },
             tooltip:{

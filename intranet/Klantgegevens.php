@@ -106,7 +106,7 @@ $KLANT_UPDATE_ADRESGEGEVENS->execute();
                 <?php
                 echo '<p> Voornaam: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['voornaam'] . '</p>';
                 echo '<p> Achternaam: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['achternaam'] . '</p>';
-                echo '<p> Email: ';
+                echo '<p> Email: ' . $_SERVER["AUTHENTICATE_UID"] . '</p>';
                 echo '<p> Klantnummer: ' . $result_KLANT_READ_KLANTGEGEVENS[0]['klantnummer'] . '</p>';
                 ?>
             </div>

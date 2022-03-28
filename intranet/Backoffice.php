@@ -101,39 +101,42 @@ $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METE
         <div class="col-4">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="postcode">Postcode:</label>
+                    <label for="postcode">Postcode:</label> <br>
                     <input type="text"
                            id="postcode"
                            name="postcode">
                     <input type="submit"
                            name="get_postcode"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
                 </div>
             </form>
         </div>
         <div class="col-4">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="plaatsnaam">Plaatsnaam:</label>
+                    <label for="plaatsnaam">Plaatsnaam:</label> <br>
                     <input type="text"
                            id="plaatsnaam"
                            name="plaatsnaam">
                     <input type="submit"
                            name="get_plaatsnaam"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
                 </div>
             </form>
         </div>
         <div class="col-4">
             <form method="post">
                 <div class="form-group m-3 p-3">
-                    <label for="gemeente">Gemeente:</label>
+                    <label for="gemeente">Gemeente:</label> <br>
                     <input type="text"
                            id="gemeente"
                            name="gemeente">
                     <input type="submit"
                            name="get_gemeente"
-                           value="zoek">
+                           value="zoek"
+                           class="btn btn-primary">
                 </div>
             </form>
         </div>

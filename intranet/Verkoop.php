@@ -32,13 +32,14 @@ GROUP BY a_postcode, ms_datum, m_product;");
 $BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE->bindParam(':postcode', $input_postcode);
 $BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE->execute();
 $result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE = $BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE->fetchAll();
-
+$_SESSION['bulkdata'] = $result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE;
 //zoek aantal meters per plaatsnaam
 //SQL-query met parameters
 if (isset($_POST['get_plaatsnaam'])) {
     $input_plaatsnaam = $_POST['plaatsnaam'];
     $_SESSION['geografische_eenheid'] = 2;
 }
+
 $BACKOFFICE_READ_AANTAL_METERS_BY_PLAATSNAAM = $connection->prepare("
 SELECT a_plaatsnaam as plaatsnaam,
        ms_datum   as datum,
@@ -60,6 +61,7 @@ if (isset($_POST['get_gemeente'])) {
     $input_gemeente = $_POST['gemeente'];
     $_SESSION['geografische_eenheid'] = 3;
 }
+
 $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $connection->prepare("
 SELECT a_gemeente as gemeente,
        ms_datum   as datum,
@@ -74,22 +76,6 @@ GROUP BY a_gemeente, ms_datum, m_product;");
 $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->bindParam(':gemeente', $input_gemeente);
 $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->execute();
 $result_BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE = $BACKOFFICE_READ_AANTAL_METERS_BY_GEMEENTE->fetchAll();
-
-if (isset($_POST['export']))
-{
-    $file_name = "export_aantal_meters_" . date('Y-m-d') . "xls";
-    $fields = array('#', 'geografische eenheid', 'Datum', 'Product', 'Aantal Meters');
-    $excel_data = implode("\t", array_values($fields)) . "\n";
-
-    foreach ($result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE as $result) {
-        $linedata = array($result['postcode'], $result['datum'], $result['product'], $result['aantalMeterstanden']);
-    }
-    $excel_data .= implode("\t", array_values($linedata)) . "\n";
-
-    header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=\"$file_name\"");
-}
-
 ?>
 
     <!doctype html>
@@ -160,9 +146,11 @@ if (isset($_POST['export']))
             <form method="post">
                 <div class="form-group m-3 p-3">
                     <label>Exporteer: </label> <br>
+                    <!--                    <input type="hidden" name="data" value="-->
+                    <?php //$result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE; ?><!--" >-->
                     <input type="submit"
                            name="export"
-                           value="Exporteer"
+                           value="Werkt niet"
                            class="btn btn-warning">
                 </div>
             </form>
@@ -198,8 +186,11 @@ if (isset($_POST['export']))
                 <!-- print de rows uit voor de opgevraagde data-->
                 <?php
                 $index = 1;
+                echo "Geografische eenheid is: " . $_SESSION['geografische_eenheid'];
+                print_r($result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE);
                 switch ($_SESSION['geografische_eenheid']) {
                     case 1:
+                        $_SESSION["bulkdata"] = $result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE;
                         foreach ($result_BACKOFFICE_READ_AANTAL_METERS_BY_POSTCODE as $row_postcode) {
                             $postcode = $row_postcode["postcode"];
                             $datum = $row_postcode["datum"];

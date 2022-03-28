@@ -29,6 +29,7 @@ if ($IsPrivacyChecked && $IsValidPassword) {
     if ($IsValidClientData){
         try {
             CreateNewClient($lnk, $email, $wachtwoord, $klantnummer);
+            header("Location:"."/intranet/index.php");
         } catch (Exception $exception){
 
         }
@@ -63,11 +64,3 @@ function CheckClientNumberAndPostalCode($con, $givenClientNumber, $givenPostalCo
     }
 }
 ?>
-<html>
-<head>
-    <title>Test</title>
-</head>
-<body>
-<h1>content</h1>
-</body>
-</html>

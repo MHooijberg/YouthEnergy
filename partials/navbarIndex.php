@@ -10,7 +10,6 @@ if (session_status() == PHP_SESSION_NONE){
     </a>
     <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a href="/index.php" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="/accountaanmaken.php" class="nav-link">Account Aanvragen</a></li>
         <li class="nav-item"><a href="/intranet" class="nav-link">Intranet</a></li>
         <?php
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -23,6 +22,12 @@ if (session_status() == PHP_SESSION_NONE){
                         $permissions['ReadMeetgegevensPlaatsnaam'] == true |
                         $permissions['ReadMeetgegevensStraat'] == true
                     );
+                    $verkoop = ($permissions['ReadMeetgegevensPostcode'] |
+                        $permissions['ReadMeetgegevensGemeente'] |
+                        $permissions['ReadMeetgegevensPlaatsnaam'] |
+                        $permissions['ReadMeetgegevensStraat'] |
+                        $permissions['ExportMeetgegevensBulk']
+                    );
                     $klantenservice = ($permissions['ReadKlantgegevensSingle'] == true |
                         $permissions['ReadMeetgegevensSingle'] == true
                     );
@@ -31,13 +36,16 @@ if (session_status() == PHP_SESSION_NONE){
                         $permissions['DeleteRole'] == true
                     );
                     if ($verbruiksmeter){
-                        echo '<li class="nav-item"><a href="/intranet/verbruiksmeter.php" class="nav-link">Verbruiksmeter</a></li>';
+                        echo '<li class="nav-item"><a href="/intranet/Verbruiksmeter.php" class="nav-link">Verbruiksmeter</a></li>';
                     }
                     if ($klantgegevens){
                         echo '<li class="nav-item"><a href="/intranet/Klantgegevens.php" class="nav-link">Klantgegevens</a></li>';
                     }
                     if ($backoffice){
                         echo '<li class="nav-item"><a href="/intranet/Backoffice.php" class="nav-link">Backoffice</a> </li>';
+                    }
+                    if ($verkoop){
+                        echo '<li class="nav-item"><a href="/intranet/Verkoop.php" class="nav-link">Verkoop</a> </li>';
                     }
                     if ($klantenservice){
                         echo '<li class="nav-item"><a href="/intranet/KlantenService.php"class="nav-link">Klantenservice</a></li>';
@@ -46,6 +54,9 @@ if (session_status() == PHP_SESSION_NONE){
                         echo '<li class="nav-item"><a href="/intranet/ICT.php"class="nav-link">ICT</a></li>';
                     }
                 }
+            }
+            else {
+                echo '<li class="nav-item"><a href="/accountaanmaken.php" class="nav-link">Account Aanvragen</a></li>';
             }
         ?>
         <li class="nav-item"><a href="../partials/contact.php" class="nav-link">Contact</a></li>

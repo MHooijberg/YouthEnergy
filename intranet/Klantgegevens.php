@@ -105,7 +105,7 @@ $KLANT_UPDATE_ADRESGEGEVENS->execute();
             <div class="col-12 d-flex flex-column border border-dark rounded w-50">
                 <h2>Mijn meterstanden aanvragen</h2>
                 <p>vraag hier je meterstanden aan</p>
-                <a href="verbruiksmeter.php">
+                <a href="Verbruiksmeter.php">
                     <input type="button"
                            class="btn btn-primary btn-lg m-3"
                            value="Aanvragen">

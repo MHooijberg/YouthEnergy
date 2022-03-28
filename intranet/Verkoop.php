@@ -1,9 +1,18 @@
 <?php
+include_once 'rbac_permissions_support.inc.php';
+
+$permissions = array();
+$permissions[] = 'ReadMeetgegevensPostcode';
+$permissions[] = 'ReadMeetgegevensGemeente';
+$permissions[] = 'ReadMeetgegevensPlaatsnaam';
+$permissions[] = 'ReadMeetgegevensStraat';
+$permissions[] = 'ExportMeetgegevensBulk';
+ApproveOrRedirect($permissions, true);
+
 $user = 'website';       ///< the username to connect to the database
 $pass = 'wachtwoord';    ///< the password to connect to the database
 $connection = new PDO('mysql:host=localhost;dbname=energy', $user, $pass); ///< make the connection
 
-session_start();
 if (!isset($_SESSION["geografische_eenheid"])) {
     $_SESSION["geografische_eenheid"] = 0;
 }

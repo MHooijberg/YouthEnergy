@@ -128,7 +128,7 @@ function CreateNewClient($lnk, $clientId, $password, $clientNumber)
         $errno = ldap_errno($lnk);
         throw new Exception($error, $errno);
     }
-    $RoleDN = "cn=clients,ou=extern,o=Energy,dc=energy,dc=org";
+    $RoleDN = "cn=klanten,ou=extern,o=Energy,dc=energy,dc=org";
     AddUserToGroup($lnk, $RoleDN, $userDN);
 
 }// CreateNewClient

@@ -45,39 +45,7 @@ function reportUserInfo()
 <body>
 <? include_once '../partials/navbarIndex.php'; ?>
 <main class="container-fluid">
-    <article>
-        <section>
-            <header>
-                <P> Intranet :: It works! </p>
-            </header>
-            <P>Login gegevens:</P>
-            <h1></h1>
-            <?
-
-            /**
-             * First the HTML
-             */
-            echo "<P>Gebruiker '" . $_SERVER["AUTHENTICATE_UID"] . "' ingelogd met wachtwoord '" . $_SERVER['PHP_AUTH_PW'] . "'</P>";
-            ?>
-        </section>
-        <section>
-            <P>Gebruik onderstaande formulier om een nieuwe gebruiker aan te maken. De afhandeling van het aanmaken van
-                deze gebruiker vindt plaats via het script 'createNewUser.php'.
-            </P>
-            <form action="createNewUser.php" method="post">
-                <label for="idUserName">Gebruikersnaam</label>
-                <input type="text" name="username" id="idUserName">
-                <br/>
-                <label for="idVoornaam">Voornaam</label>
-                <input type="text" name="voornaam" id="idVoornaam">
-                <br/>
-                <label for="idAchternaam">Achternaam</label>
-                <input type="text" name="achternaam" id="idAchternaam">
-                <br/>
-                <button type="submit">Opslaan</button>
-            </form>
-        </section>
-    </article>
+<h1>Intranet Main Pagina</h1>
 </main>
 <? include_once '../partials/footer.php'; ?>
 </body>
